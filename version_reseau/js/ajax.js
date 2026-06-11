@@ -121,7 +121,8 @@ function initialiserEtat(callback) {
 // -----------------------------------------------
 function etatDefaut() {
     return {
-        cases: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        // Index 0 inutilisé
+        cases: [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
         scoreJ1: 0,
         scoreJ2: 0,
         joueurActif: 1,

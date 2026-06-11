@@ -6,8 +6,8 @@ var scoreJ2 = 0;
 var joueurActif = 1;
 var partieTerminee = false;
 
-var monRole = 0;   
-var jaJoue = false; 
+var monRole = 0;
+var jaJoue = false;
 
 var boucle = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
@@ -149,7 +149,7 @@ function positionDansBoucle(caseIdx) {
 
 function distribuerGraines(caseDepart, nbGraines) {
     var pos = positionDansBoucle(caseDepart);
-    var sautCaseDepart = (nbGraines > 14);
+    var sautCaseDepart = (nbGraines > 13);
     var casesDistrib = [];
 
     for (var i = 1; i <= nbGraines; i++) {
@@ -236,7 +236,7 @@ function coupRespecteSolidarite(idx) {
 
     var graines = cases[idx];
     var pos = positionDansBoucle(idx);
-    var saut = (graines > 14);
+    var saut = (graines > 13);
     var count = 0;
     var grainesEnvoyees = 0;
 
@@ -268,7 +268,7 @@ function coupNourritAdversaire(idx, adversaire) {
     var campAdv = campDuJoueur(adversaire);
     var graines = cases[idx];
     var pos = positionDansBoucle(idx);
-    var saut = (graines > 14);
+    var saut = (graines > 13);
     var count = 0;
 
     for (var i = 1; i <= graines + (saut ? 1 : 0); i++) {
@@ -340,7 +340,7 @@ function terminerPartie() {
     partieTerminee = true;
     scoreJ1 += somme(campDuJoueur(1));
     scoreJ2 += somme(campDuJoueur(2));
-    for (var i = 0; i < 14; i++) cases[i] = 0;
+    for (var i = 1; i <= 14; i++) cases[i] = 0;
 }
 
 
