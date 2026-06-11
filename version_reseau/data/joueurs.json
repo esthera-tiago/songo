@@ -1,0 +1,12 @@
+{
+    "joueur1": {
+        "id": 1,
+        "nom": "Joueur 1",
+        "pret": false
+    },
+    "joueur2": {
+        "id": 2,
+        "nom": "Joueur 2",
+        "pret": false
+    }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songo - Jeu Local</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div id="container">
+
+    <h1> Songo By TIAGO</h1>
+
+    <!-- Scores -->
+    <div id="scores">
+        <div class="score-joueur" id="score-j1">
+            <span class="nom-joueur">Joueur 1</span>
+            <span class="valeur-score" id="pts-j1">0</span>
+            <span class="label-score">graines</span>
+        </div>
+        <div class="score-joueur" id="score-j2">
+            <span class="nom-joueur">Joueur 2</span>
+            <span class="valeur-score" id="pts-j2">0</span>
+            <span class="label-score">graines</span>
+        </div>
+    </div>
+
+    <!-- actif player-->
+    <div id="tour-actuel">
+        <span id="texte-tour">Tour de : <strong id="nom-joueur-actif">Joueur 1</strong></span>
+    </div>
+
+    <!-- table -->
+    <div id="plateau">
+
+        <!-- top row -->
+        <div class="rangee" id="rangee-j2">
+            <div class="case" id="case-14" onclick="jouerCase(14)">
+                <div class="numero-case">14</div>
+                <div class="graines" id="graines-14"></div>
+                <div class="compteur" id="cpt-14">5</div>
+            </div>
+            <div class="case" id="case-13" onclick="jouerCase(13)">
+                <div class="numero-case">13</div>
+                <div class="graines" id="graines-13"></div>
+                <div class="compteur" id="cpt-13">5</div>
+            </div>
+            <div class="case" id="case-12" onclick="jouerCase(12)">
+                <div class="numero-case">12</div>
+                <div class="graines" id="graines-12"></div>
+                <div class="compteur" id="cpt-12">5</div>
+            </div>
+            <div class="case" id="case-11" onclick="jouerCase(11)">
+                <div class="numero-case">11</div>
+                <div class="graines" id="graines-11"></div>
+                <div class="compteur" id="cpt-11">5</div>
+            </div>
+            <div class="case" id="case-10" onclick="jouerCase(10)">
+                <div class="numero-case">10</div>
+                <div class="graines" id="graines-10"></div>
+                <div class="compteur" id="cpt-10">5</div>
+            </div>
+            <div class="case" id="case-9" onclick="jouerCase(9)">
+                <div class="numero-case">9</div>
+                <div class="graines" id="graines-9"></div>
+                <div class="compteur" id="cpt-9">5</div>
+            </div>
+            <div class="case" id="case-8" onclick="jouerCase(8)">
+                <div class="numero-case">8</div>
+                <div class="graines" id="graines-8"></div>
+                <div class="compteur" id="cpt-8">5</div>
+            </div>
+        </div>
+
+        <!-- Flèches de sens de jeu -->
+        <div id="sens-jeu">
+            <span class="fleche-j2">← J2 joue de droite à gauche</span>
+            <span class="fleche-j1">→ J1 joue de gauche à droite</span>
+        </div>
+
+        <!-- bottom row -->
+        <div class="rangee" id="rangee-j1">
+            <div class="case" id="case-1" onclick="jouerCase(1)">
+                <div class="compteur" id="cpt-1">5</div>
+                <div class="graines" id="graines-1"></div>
+                <div class="numero-case">1</div>
+            </div>
+            <div class="case" id="case-2" onclick="jouerCase(2)">
+                <div class="compteur" id="cpt-2">5</div>
+                <div class="graines" id="graines-2"></div>
+                <div class="numero-case">2</div>
+            </div>
+            <div class="case" id="case-3" onclick="jouerCase(3)">
+                <div class="compteur" id="cpt-3">5</div>
+                <div class="graines" id="graines-3"></div>
+                <div class="numero-case">3</div>
+            </div>
+            <div class="case" id="case-4" onclick="jouerCase(4)">
+                <div class="compteur" id="cpt-4">5</div>
+                <div class="graines" id="graines-4"></div>
+                <div class="numero-case">4</div>
+            </div>
+            <div class="case" id="case-5" onclick="jouerCase(5)">
+                <div class="compteur" id="cpt-5">5</div>
+                <div class="graines" id="graines-5"></div>
+                <div class="numero-case">5</div>
+            </div>
+            <div class="case" id="case-6" onclick="jouerCase(6)">
+                <div class="compteur" id="cpt-6">5</div>
+                <div class="graines" id="graines-6"></div>
+                <div class="numero-case">6</div>
+            </div>
+            <div class="case" id="case-7" onclick="jouerCase(7)">
+                <div class="compteur" id="cpt-7">5</div>
+                <div class="graines" id="graines-7"></div>
+                <div class="numero-case">7</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Messages -->
+    <div id="message-zone">
+        <p id="message"></p>
+    </div>
+
+    <!-- new game -->
+    <div id="actions">
+        <button id="btn-nouvelle-partie" onclick="nouvellePartie()">Nouvelle partie</button>
+    </div>
+
+</div>
+</body>
+</html>

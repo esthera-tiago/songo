@@ -1,0 +1,325 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #2c1a0e;
+    color: #f5deb3;
+    font-family: Georgia, serif;
+    padding: 40px;
+}
+
+#container {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.2em;
+    color: #f5deb3;
+    margin-bottom: 4px;
+}
+
+
+
+/* --- Écran de connexion --- */
+#ecran-connexion {
+    text-align: center;
+    background: #4a2c0e;
+    border: 2px solid #8b5e3c;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+#ecran-connexion h2 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #f5deb3;
+}
+
+.hint {
+    color: #9a7a5a;
+    font-size: 0.85em;
+    margin-bottom: 40px;
+}
+
+.hint-reseau {
+    color: #c8a060;
+    font-size: 0.8em;
+    margin-top: 16px;
+}
+
+#choix-joueur {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.btn-choix {
+    background: #8b5e3c;
+    color: #f5deb3;
+    border: 2px solid #c8a97a;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 1em;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-choix:hover {
+    background: #a57050;
+}
+
+/* --- Statut réseau --- */
+#statut-reseau {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    background: #1a0e06;
+    border-radius: 6px;
+    color: #9a7a5a;
+}
+
+#indicateur-sync {
+    margin-right: 6px;
+}
+
+/* --- Scores --- */
+#scores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.score-joueur {
+    background: #4a2c0e;
+    border: 2px solid #8b5e3c;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    min-width: 130px;
+    transition: border-color 0.3s;
+}
+
+.score-joueur.actif {
+    border-color: #f0c040;
+    box-shadow: 0 0 8px #f0c04066;
+}
+
+.nom-joueur {
+    display: block;
+    font-size: 0.9em;
+    color: #c8a97a;
+    margin-bottom: 4px;
+}
+
+.valeur-score {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    color: #f5deb3;
+}
+
+.label-score {
+    font-size: 0.8em;
+    color: #9a7a5a;
+}
+
+#mon-role {
+    text-align: center;
+    font-size: 0.85em;
+    color: #c8a97a;
+}
+
+#label-role {
+    display: block;
+    padding: 6px 12px;
+    background: #3d1f08;
+    border-radius: 6px;
+    border: 1px solid #7a4f2a;
+}
+
+/* --- Tour actuel --- */
+#tour-actuel {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 1em;
+    color: #c8a97a;
+}
+
+#tour-actuel strong {
+    color: #f0c040;
+}
+
+/* --- Plateau --- */
+#plateau {
+    background: #5c3317;
+    border: 3px solid #8b5e3c;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.rangee {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* --- Cases --- */
+.case {
+    flex: 1;
+    background: #3d1f08;
+    border: 2px solid #7a4f2a;
+    border-radius: 50%;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 2px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.case:hover {
+    background: #5a2e0f;
+    border-color: #c8a97a;
+}
+
+.case.jouable {
+    border-color: #f0c040;
+}
+
+.case.case-speciale {
+    border-color: #9370db;
+    background: #2a1545;
+}
+
+.case.case-speciale:hover {
+    background: #3d2060;
+    border-color: #c39aff;
+}
+
+.case.bloquee {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.numero-case {
+    font-size: 0.65em;
+    color: #9a7a5a;
+    font-style: italic;
+}
+
+.compteur {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #f5deb3;
+}
+
+.graines {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    min-height: 32px;
+    align-items: center;
+    padding: 2px;
+}
+
+.graine {
+    width: 8px;
+    height: 8px;
+    background: #c8a97a;
+    border-radius: 50%;
+    border: 1px solid #8b6040;
+}
+
+.graine.petite {
+    width: 5px;
+    height: 5px;
+}
+
+/* --- Sens du jeu --- */
+#sens-jeu {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 4px;
+    font-size: 0.72em;
+    color: #7a5a3a;
+    font-style: italic;
+}
+
+/* --- Messages --- */
+#message-zone {
+    min-height: 36px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+#message {
+    font-size: 0.95em;
+    color: #c8a97a;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+#message.erreur {
+    color: #e07070;
+    background: #3a1010;
+    border: 1px solid #800000;
+}
+
+#message.succes {
+    color: #80d080;
+    background: #0a2a0a;
+    border: 1px solid #006400;
+}
+
+#message.info {
+    color: #f0c040;
+    background: #2a2000;
+    border: 1px solid #806000;
+}
+
+#message.fin {
+    color: #f5deb3;
+    background: #3d1f08;
+    border: 2px solid #f0c040;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 12px;
+}
+
+/* --- Boutons --- */
+#actions {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#btn-nouvelle-partie {
+    background: #8b5e3c;
+    color: #f5deb3;
+    border: 2px solid #c8a97a;
+    border-radius: 8px;
+    padding: 10px 28px;
+    font-size: 1em;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#btn-nouvelle-partie:hover {
+    background: #a57050;
+}
+

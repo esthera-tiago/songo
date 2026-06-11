@@ -1,0 +1,10 @@
+{
+    "cases": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    "scoreJ1": 0,
+    "scoreJ2": 0,
+    "joueurActif": 1,
+    "partieTerminee": false,
+    "dernierCoup": null,
+    "message": "",
+    "timestamp": 0
+}
