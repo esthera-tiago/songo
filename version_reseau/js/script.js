@@ -8,17 +8,22 @@ var partieTerminee = false;
 
 var monRole = 0;
 var jaJoue = false;
+var distributionEnCours = false;
 
 var boucle = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
+var audioCtx = null;
 
+//connection btw the two devices (:)
 function seConnecter(role) {
+    obtenirAudioCtx();
+
     monRole = role;
     document.getElementById("ecran-connexion").style.display = "none";
     document.getElementById("jeu").style.display = "block";
     document.getElementById("label-role").textContent = "Vous êtes : Joueur " + monRole;
 
-    // Charger l'état initial puis démarrer le polling
+
     initialiserEtat(function (etat) {
         appliquerEtat(etat);
         mettreAJourSync(true);
@@ -51,9 +56,8 @@ function appliquerEtat(etat) {
 
 // JOUER UN COUP
 
-function jouerCase(idx) {
-    if (partieTerminee) {
-        afficherMessage("La partie est terminée.", "info");
+async function jouerCase(idx) {
+    if (partieTerminee || distributionEnCours) {
         return;
     }
 
@@ -82,7 +86,10 @@ function jouerCase(idx) {
     var graines = cases[idx];
     cases[idx] = 0;
 
-    var derniereCase = distribuerGraines(idx, graines);
+    distributionEnCours = true;
+    var derniereCase = await distribuerGraines(idx, graines);
+    distributionEnCours = false;
+
     effectuerCaptures(derniereCase);
 
     joueurActif = (joueurActif === 1) ? 2 : 1;
@@ -100,7 +107,7 @@ function jouerCase(idx) {
         }
     }
 
-    // Sauvegarder l'état via ajax.js
+    // keeps track of the stage using ajax.js
     var nouvelEtat = {
         cases: cases.slice(),
         scoreJ1: scoreJ1,
@@ -139,15 +146,62 @@ function appartientAuJoueur(caseIdx, j) {
     return campDuJoueur(j).indexOf(caseIdx) !== -1;
 }
 
-// =============================================
-// SEMAILLE
-// =============================================
+
+// sharing of grains
 
 function positionDansBoucle(caseIdx) {
     return boucle.indexOf(caseIdx);
 }
 
-function distribuerGraines(caseDepart, nbGraines) {
+function time(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+// Sound helper jesus (:)
+function obtenirAudioCtx() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    // Always try to resume — some browsers suspend it between interactions
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+function jouerSonGraine() {
+    try {
+        const ctx = obtenirAudioCtx();
+        const now = ctx.currentTime;
+
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(400, now);
+        oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+
+        // Maximum volume (1.0)
+        gainNode.gain.setValueAtTime(1.0, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.start(now);
+        oscillator.stop(now + 0.2);
+
+        oscillator.onended = () => {
+            oscillator.disconnect();
+            gainNode.disconnect();
+        };
+    } catch (e) {
+        console.warn("Audio error:", e);
+    }
+}
+
+//uddate of grain sharing
+async function distribuerGraines(caseDepart, nbGraines) {
     var pos = positionDansBoucle(caseDepart);
     var sautCaseDepart = (nbGraines > 13);
     var casesDistrib = [];
@@ -163,6 +217,9 @@ function distribuerGraines(caseDepart, nbGraines) {
 
     for (var j = 0; j < casesDistrib.length; j++) {
         cases[casesDistrib[j]]++;
+        jouerSonGraine();
+        afficherPlateau();
+        await time(400);
     }
 
     return casesDistrib[casesDistrib.length - 1];
@@ -219,9 +276,8 @@ function estCapturableGraines(nb) {
     return nb === 2 || nb === 3 || nb === 4;
 }
 
-// =============================================
 // SOLIDARITÉ
-// =============================================
+
 
 function coupRespecteSolidarite(idx) {
     var adversaire = (joueurActif === 1) ? 2 : 1;

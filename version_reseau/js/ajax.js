@@ -1,20 +1,12 @@
-// ajax.js — Couche AJAX pour la version réseau du Songo
-// INF222 — Projet universitaire
-//
-// Principe : l'état du jeu est stocké dans localStorage (sous la clé "songo_etat")
-// Les deux onglets/navigateurs sur la même machine se synchronisent via
-// un polling toutes les 2 secondes + l'événement "storage" du navigateur.
-//
-// Pour une vraie simulation réseau sur deux postes : lancer server.py
-// qui permet d'écrire dans data/partie.json via fetch().
+
+// ajax :( I literaly hate this part
 
 var URL_PARTIE = "data/partie.json";
-var CLE_STORAGE = "songo_etat";        // clé dans localStorage
-var intervalleSync = null;             // référence au setInterval de polling
+var CLE_STORAGE = "songo_etat";        
+var intervalleSync = null;            
 
-// -----------------------------------------------
-// Lire l'état depuis localStorage (synchronisation locale rapide)
-// -----------------------------------------------
+// reads steps from localStorage 
+
 function lireEtatLocal() {
     var data = localStorage.getItem(CLE_STORAGE);
     if (data) {
@@ -23,21 +15,19 @@ function lireEtatLocal() {
     return null;
 }
 
-// -----------------------------------------------
-// Écrire l'état dans localStorage + déclencher un événement
-// -----------------------------------------------
+
+// writes down eveverything that has been changed
+
 function ecrireEtatLocal(etat) {
     etat.timestamp = Date.now();
     localStorage.setItem(CLE_STORAGE, JSON.stringify(etat));
 }
 
-// -----------------------------------------------
-// Lire le fichier partie.json via AJAX (GET)
-// Utilisé pour charger l'état initial si pas de localStorage
-// -----------------------------------------------
+// reads partie.json using AJAX (GET) and actualises locolStorage
+
 function lirePartieFichier(callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", URL_PARTIE + "?t=" + Date.now(), true); // cache-bust
+    xhr.open("GET", URL_PARTIE + "?t=" + Date.now(), true); 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
@@ -55,14 +45,11 @@ function lirePartieFichier(callback) {
     xhr.send();
 }
 
-// -----------------------------------------------
-// Démarrer le polling toutes les 2 secondes
-// Appelle onMiseAJour(etat) si l'état a changé
-// -----------------------------------------------
+//starts polling :)
 function demarrerPolling(onMiseAJour) {
     var dernierTimestamp = 0;
 
-    // Écouter les changements de localStorage (fonctionne entre onglets)
+    
     window.addEventListener("storage", function (e) {
         if (e.key === CLE_STORAGE) {
             var etat = lireEtatLocal();
@@ -73,7 +60,6 @@ function demarrerPolling(onMiseAJour) {
         }
     });
 
-    // Polling régulier (pour la même fenêtre et comme filet de sécurité)
     intervalleSync = setInterval(function () {
         var etat = lireEtatLocal();
         if (etat && etat.timestamp > dernierTimestamp) {
@@ -83,9 +69,7 @@ function demarrerPolling(onMiseAJour) {
     }, 2000);
 }
 
-// -----------------------------------------------
-// Arrêter le polling
-// -----------------------------------------------
+// polling end ...
 function arreterPolling() {
     if (intervalleSync) {
         clearInterval(intervalleSync);
@@ -93,22 +77,20 @@ function arreterPolling() {
     }
 }
 
-// -----------------------------------------------
-// Initialiser : charger l'état depuis le JSON ou localStorage
-// -----------------------------------------------
+
 function initialiserEtat(callback) {
-    // D'abord regarder si un état existe déjà dans localStorage
+   
     var etatLocal = lireEtatLocal();
     if (etatLocal) {
         callback(etatLocal);
         return;
     }
 
-    // Sinon charger le fichier partie.json initial via AJAX
+    
     lirePartieFichier(function (etat, erreur) {
         if (erreur) {
             console.warn("Impossible de lire partie.json :", erreur);
-            // Utiliser un état par défaut
+        
             etat = etatDefaut();
         }
         ecrireEtatLocal(etat);
@@ -116,12 +98,12 @@ function initialiserEtat(callback) {
     });
 }
 
-// -----------------------------------------------
-// État par défaut (si aucun fichier serveur disponible)
-// -----------------------------------------------
+
+// default when nothing is going on
+
 function etatDefaut() {
     return {
-        // Index 0 inutilisé
+        
         cases: [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
         scoreJ1: 0,
         scoreJ2: 0,
@@ -133,9 +115,9 @@ function etatDefaut() {
     };
 }
 
-// -----------------------------------------------
-// Réinitialiser (nouvelle partie)
-// -----------------------------------------------
+
+// nouvelle partie
+
 function reinitialiserEtat() {
     var etat = etatDefaut();
     ecrireEtatLocal(etat);
