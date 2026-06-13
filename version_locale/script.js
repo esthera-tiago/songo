@@ -3,8 +3,11 @@ var scoreJ1 = 0;
 var scoreJ2 = 0;
 var joueurActif = 1;
 var partieTerminee = false;
+var distributionEnCours = false;
 
 var boucle = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+
+var audioCtx = null;
 
 
 //new game
@@ -14,6 +17,7 @@ function nouvellePartie() {
     for (var i = 1; i <= 14; i++) {
         cases[i] = 5;
     }
+    obtenirAudioCtx();
     scoreJ1 = 0;
     scoreJ2 = 0;
     joueurActif = 1;
@@ -50,9 +54,8 @@ function casesSuivantes(depart, nb) {
     return seq;
 }
 
-function jouerCase(idx) {
-    if (partieTerminee) {
-        afficherMessage("La partie est terminée", "info");
+async function jouerCase(idx) {
+    if (partieTerminee || distributionEnCours) {
         return;
     }
 
@@ -79,7 +82,9 @@ function jouerCase(idx) {
     cases[idx] = 0;
 
     var caseDepart = idx;
-    var derniereCase = distribuerGraines(caseDepart, graines);
+    distributionEnCours = true;
+    var derniereCase = await distribuerGraines(caseDepart, graines);
+    distributionEnCours = false;
 
     // Vérifier les captures
     effectuerCaptures(derniereCase);
@@ -97,28 +102,72 @@ function jouerCase(idx) {
 
 // SEMAILLE :(
 
-function distribuerGraines(caseDepart, nbGraines) {
+function time(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function obtenirAudioCtx() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+function jouerSonGraine() {
+    try {
+        const ctx = obtenirAudioCtx();
+        const now = ctx.currentTime;
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(400, now);
+        oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+
+        gainNode.gain.setValueAtTime(1.0, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.start(now);
+        oscillator.stop(now + 0.2);
+
+        oscillator.onended = () => {
+            oscillator.disconnect();
+            gainNode.disconnect();
+        };
+    } catch (e) {
+        console.warn("Audio error:", e);
+    }
+}
+
+async function distribuerGraines(caseDepart, nbGraines) {
     var pos = positionDansBoucle(caseDepart);
     var casesDistrib = [];
-    var sautCaseDepart = (nbGraines > 13); // si > 13 graines, on saute la case de départ
+    var sautCaseDepart = (nbGraines > 13);
 
     // Construire la liste des cases où on distribue
     for (var i = 1; i <= nbGraines; i++) {
         var prochaine = boucle[(pos + i) % 14];
         if (sautCaseDepart && prochaine === caseDepart) {
-            // On saute la case de départ, on décale d'une case supplémentaire
-            nbGraines++; // on allonge pour compenser le saut
-            continue;    // passer cette iteration
+            nbGraines++;
+            continue;
         }
         casesDistrib.push(prochaine);
     }
 
-    // Distribuer une graine dans chaque case
+    // Distribuer une graine dans chaque case avec animation
     for (var j = 0; j < casesDistrib.length; j++) {
         cases[casesDistrib[j]]++;
+        jouerSonGraine();
+        afficherPlateau();
+        await time(400);
     }
 
-    // Retourner la dernière case où on a déposé une graine
     return casesDistrib[casesDistrib.length - 1];
 }
 
