@@ -1,12 +1,12 @@
+// ajax.js — Synchronisation via Vercel KV
 
+var URL_LIRE   = "/api/lire";
+var URL_ECRIRE = "/api/ecrire";
 
-var URL_LIRE   = "api/lire.php";
-var URL_ECRIRE = "api/ecrire.php";
-
-var intervalleSync  = null;
+var intervalleSync   = null;
 var dernierTimestamp = 0;
 
-// etat du serveur
+// ─── LIRE L'ÉTAT ─────────────────────────────────────────────────────────────
 
 function lireEtat(callback) {
     var xhr = new XMLHttpRequest();
@@ -27,7 +27,7 @@ function lireEtat(callback) {
     xhr.send();
 }
 
-// ecrire etat du serveur
+// ─── ÉCRIRE L'ÉTAT ───────────────────────────────────────────────────────────
 
 function ecrireEtatLocal(etat) {
     etat.timestamp = Date.now();
@@ -44,7 +44,7 @@ function ecrireEtatLocal(etat) {
     xhr.send(JSON.stringify(etat));
 }
 
-// initialisation
+// ─── INITIALISATION ───────────────────────────────────────────────────────────
 
 function initialiserEtat(callback) {
     lireEtat(function (etat, erreur) {
@@ -57,14 +57,12 @@ function initialiserEtat(callback) {
     });
 }
 
-// polling
+// ─── POLLING ──────────────────────────────────────────────────────────────────
 
 function demarrerPolling(onMiseAJour) {
     intervalleSync = setInterval(function () {
         lireEtat(function (etat, erreur) {
             if (erreur || !etat) return;
-
-            // remplace la variable localStorage
             if (etat.timestamp > dernierTimestamp) {
                 dernierTimestamp = etat.timestamp;
                 onMiseAJour(etat);
@@ -80,7 +78,8 @@ function arreterPolling() {
     }
 }
 
-// default state
+// ─── ÉTAT PAR DÉFAUT ──────────────────────────────────────────────────────────
+
 function etatDefaut() {
     return {
         cases:          [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -94,7 +93,7 @@ function etatDefaut() {
     };
 }
 
-// new game
+// ─── NOUVELLE PARTIE ──────────────────────────────────────────────────────────
 
 function reinitialiserEtat() {
     var etat = etatDefaut();

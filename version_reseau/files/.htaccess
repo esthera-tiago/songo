@@ -1,5 +1,0 @@
-# Interdit l'accès direct au dossier data depuis le navigateur
-# Le fichier partie.json n'est accessible que via les scripts PHP
-
-Order Deny,Allow
-Deny from all
