@@ -1,19 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "api/*.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/$1"
+    "functions": {
+        "api/lire.js": {
+            "memory": 128,
+            "maxDuration": 5
         },
-        {
-            "src": "/(.*)",
-            "dest": "/$1"
+        "api/ecrire.js": {
+            "memory": 128,
+            "maxDuration": 5
         }
-    ]
+    }
 }
