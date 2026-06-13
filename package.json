@@ -1,6 +1,9 @@
 {
     "name": "songo-reseau",
     "version": "1.0.0",
+    "scripts": {
+        "build": "echo ok"
+    },
     "dependencies": {
         "@vercel/kv": "^1.0.0"
     }
